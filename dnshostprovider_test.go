@@ -1,6 +1,7 @@
 package zk
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"testing"
@@ -25,7 +26,7 @@ func TestDNSHostProviderCreate(t *testing.T) {
 	port := ts.Servers[0].Port
 	server := fmt.Sprintf("foo.example.com:%d", port)
 	hostProvider := &DNSHostProvider{lookupHost: localhostLookupHost}
-	zk, _, err := Connect([]string{server}, time.Second*15, WithHostProvider(hostProvider))
+	zk, _, err := Connect(context.TODO(), []string{server}, time.Second*15, WithHostProvider(hostProvider))
 	if err != nil {
 		t.Fatalf("Connect returned error: %+v", err)
 	}
@@ -112,7 +113,7 @@ func TestDNSHostProviderReconnect(t *testing.T) {
 	}
 	hp := newLocalHostPortsFacade(innerHp, ports)
 
-	zk, _, err := Connect([]string{"foo.example.com:12345"}, time.Second, WithHostProvider(hp))
+	zk, _, err := Connect(context.TODO(), []string{"foo.example.com:12345"}, time.Second, WithHostProvider(hp))
 	if err != nil {
 		t.Fatalf("Connect returned error: %+v", err)
 	}

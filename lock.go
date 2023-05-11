@@ -1,6 +1,7 @@
 package zk
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
@@ -126,7 +127,7 @@ func (l *Lock) LockWithData(data []byte) error {
 		}
 
 		// Wait on the node next in line for the lock
-		_, _, ch, err := l.c.GetW(l.path + "/" + prevSeqPath)
+		_, _, ch, err := l.c.GetW(context.TODO(), l.path+"/"+prevSeqPath)
 		if err != nil && err != ErrNoNode {
 			return err
 		} else if err != nil && err == ErrNoNode {

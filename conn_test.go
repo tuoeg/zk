@@ -59,7 +59,7 @@ func TestRecurringReAuthHang(t *testing.T) {
 
 func TestConcurrentReadAndClose(t *testing.T) {
 	WithListenServer(t, func(server string) {
-		conn, _, err := Connect([]string{server}, 15*time.Second)
+		conn, _, err := Connect(context.TODO(), []string{server}, 15*time.Second)
 		if err != nil {
 			t.Fatalf("Failed to create Connection %s", err)
 		}

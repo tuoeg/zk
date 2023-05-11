@@ -673,7 +673,7 @@ func TestChildWatch(t *testing.T) {
 		t.Fatalf("Delete returned error: %+v", err)
 	}
 
-	children, stat, childCh, err := zk.ChildrenW("/")
+	children, stat, childCh, err := zk.ChildrenW(context.TODO(), "/")
 	if err != nil {
 		t.Fatalf("Children returned error: %+v", err)
 	} else if stat == nil {
@@ -702,7 +702,7 @@ func TestChildWatch(t *testing.T) {
 
 	// Delete of the watched node should trigger the watch
 
-	children, stat, childCh, err = zk.ChildrenW("/gozk-test")
+	children, stat, childCh, err = zk.ChildrenW(context.TODO(), "/gozk-test")
 	if err != nil {
 		t.Fatalf("Children returned error: %+v", err)
 	} else if stat == nil {
@@ -773,14 +773,14 @@ func TestSetWatchers(t *testing.T) {
 			t.Fatalf("Create returned: %+v", err)
 		}
 		testPaths[testPath] = nil
-		_, _, testEvCh, err := zk.GetW(testPath)
+		_, _, testEvCh, err := zk.GetW(context.TODO(), testPath)
 		if err != nil {
 			t.Fatalf("GetW returned: %+v", err)
 		}
 		testPaths[testPath] = testEvCh
 	}
 
-	children, stat, childCh, err := zk.ChildrenW("/")
+	children, stat, childCh, err := zk.ChildrenW(context.TODO(), "/")
 	if err != nil {
 		t.Fatalf("Children returned error: %+v", err)
 	} else if stat == nil {
@@ -887,7 +887,7 @@ func TestExpiringWatch(t *testing.T) {
 		t.Fatalf("Delete returned error: %+v", err)
 	}
 
-	children, stat, childCh, err := zk.ChildrenW("/")
+	children, stat, childCh, err := zk.ChildrenW(context.TODO(), "/")
 	if err != nil {
 		t.Fatalf("Children returned error: %+v", err)
 	} else if stat == nil {
@@ -916,7 +916,7 @@ func TestRequestFail(t *testing.T) {
 	// If connecting fails to all servers in the list then pending requests
 	// should be errored out so they don't hang forever.
 
-	zk, _, err := Connect([]string{"127.0.0.1:32444"}, time.Second*15)
+	zk, _, err := Connect(context.TODO(), []string{"127.0.0.1:32444"}, time.Second*15)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -938,7 +938,7 @@ func TestRequestFail(t *testing.T) {
 }
 
 func TestIdempotentClose(t *testing.T) {
-	zk, _, err := Connect([]string{"127.0.0.1:32444"}, time.Second*15)
+	zk, _, err := Connect(context.TODO(), []string{"127.0.0.1:32444"}, time.Second*15)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -971,13 +971,13 @@ func TestSlowServer(t *testing.T) {
 	}
 	defer close(stopCh)
 
-	zk, _, err := Connect([]string{proxyAddr}, time.Millisecond*500)
+	zk, _, err := Connect(context.TODO(), []string{proxyAddr}, time.Millisecond*500)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer zk.Close()
 
-	_, _, wch, err := zk.ChildrenW("/")
+	_, _, wch, err := zk.ChildrenW(context.TODO(), "/")
 	if err != nil {
 		t.Fatal(err)
 	}
